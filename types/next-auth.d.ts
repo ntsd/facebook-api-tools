@@ -15,7 +15,7 @@ declare module "next-auth/jwt" {
   // FACEBOOK Jwt Tokens
   interface JWT {
     id: string
-    accessToken: string | undefined
+    accessToken: string
     name: string
     email: string
     picture: string
