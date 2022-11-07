@@ -30,6 +30,10 @@ export interface Page {
     category: string
 }
 
-export interface LikePagesResponse {
+export interface MeResponse {
     likes: ResponseObject<Page>
+}
+
+export interface StatusResponse {
+    success: boolean
 }

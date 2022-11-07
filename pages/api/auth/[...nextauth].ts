@@ -7,6 +7,7 @@ export const authOptions: NextAuthOptions = {
     FacebookProvider({
       clientId: process.env.FACEBOOK_ID || '',
       clientSecret: process.env.FACEBOOK_SECRET || '',
+      authorization: "https://www.facebook.com/v11.0/dialog/oauth?scope=email,user_likes,read_insights,pages_manage_engagement",
     }),
   ],
   // The secret should be set to a reasonably long random string.

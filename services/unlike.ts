@@ -1,12 +1,14 @@
 import { getSession } from "next-auth/react"
-import { Page, ResponseObject } from "../types/facebook"
+import { StatusResponse } from "../types/facebook"
 import axios from "./axios.config"
 
-// https://developers.facebook.com/docs/graph-api/reference/page/
+// Note: seem like unlike only work for page unlike page, post
 
-const likeQuery = `likes?fields=id,name,about,link,picture,followers_count,category`
+// https://developers.facebook.com/docs/graph-api/reference/v15.0/object/likes#delete
 
-export const getLikePages = async (limit: number = 20, signal?: AbortSignal, next?: string): Promise<ResponseObject<Page>> => {
+// required `pages_manage_engagement` permission
+
+export const unlikeObject = async (objectId: string): Promise<StatusResponse> => {
     return new Promise((resolve, reject) => {
         getSession()
             .then((session) => {
@@ -14,18 +16,15 @@ export const getLikePages = async (limit: number = 20, signal?: AbortSignal, nex
                     reject('can not get session')
                     return
                 }
-                let url = `/${session.token.id}/${likeQuery}&access_token=${session.token.accessToken}&limit=${limit}`
-                if (next) {
-                    url = next
-                }
-                axios.get<ResponseObject<Page>>(url, { signal })
+                let url = `/${objectId}/likes?access_token=${session.token.accessToken}`
+                axios.delete<StatusResponse>(url)
                     .then(res => {
                         if (res.status != 200) {
                             reject('http error status: ' + res.status)
                             return
                         }
-                        if (res.data.data.length == 0) {
-                            reject('got empty data: ' + res.status)
+                        if (!res.data.success) {
+                            reject('response status not success')
                             return
                         }
                         resolve(res.data)
